@@ -6,13 +6,14 @@ import './App.css';
 {/* <InfoWindow /> gives the ability to pop up "more info" on the Map */}
 
 class App extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
 
+    console.log(props.myMapArr);
     this.state = {
       activeMarker: {},
       selectedPlace: {},
-      showingInfoWindow: false
+      showingInfoWindow: false,
     };
   }
 
@@ -38,13 +39,44 @@ class App extends Component {
       showingInfoWindow: true
     });
   }
-  render() {
-            {/* initalCenter: Takes an object containing latitude and longitude coordinates. Sets the maps center upon loading. */}
 
-  let showInfo = this.state.showingInfoWindow;
-  if(showInfo){
+
+  render() {
+    let markerList = [];
+    let infoList = [];
     
-  }
+    const style={
+      Marker:{
+        height:'10px', 
+        width:'10px'
+      }
+    }
+
+    this.props.myMapArr.forEach(element => {
+      markerList.push(
+          <Marker
+            onClick={(e)=>{this.onMarkerClick(e)}}
+            title={'The marker`s title will appear as a tooltip.'}
+            name={"TwitterHandle "}
+            position={{lat: element.lat, lng: element.lng}} 
+            style={style.Marker}
+          />)
+    
+
+      infoList.push(
+
+           <InfoWindow 
+            position={{lat: element.lat, lng: element.lng}}
+            marker={this.state.activeMarker}
+            visible={this.state.showingInfoWindow} 
+          >
+            <div>
+              <h1>{this.state.selectedPlace.name} </h1>
+            </div>
+          </InfoWindow> 
+        );
+    });
+
   return (
       <div className="App">
         <Map className="map"
@@ -60,40 +92,33 @@ class App extends Component {
             zoom={4}
         >  
 
-        <Marker
-          onClick={(e)=>{this.onMarkerClick(e)}}
-          title={'The marker`s title will appear as a tooltip.'}
-          name={'SOMA'}
-          position={{lat: 37.778519, lng: -122.405640}} 
-        />
-        <Marker
+        {markerList}
+        {infoList}
+
+        {/* <Marker
           onClick={(e)=>{this.onMarkerClick(e)}}
           onMouseover = {(e)=>{this.onMouseoverMarker(e)}}
-          name={'Dolores park'}
+          name={
+            <div>
+              <h1>Dolores park</h1>
+              <h2> Park</h2>
+            </div>}
           position={{lat: 37.759703, lng: -122.428093}} />
-        <Marker />
+        <Marker /> */}
 
-        <Marker
-          onClick={(e)=>{this.onMarkerClick(e)}}
-          onMouseover = {(e)=>{this.onMouseoverMarker(e)}}        
-          title={"This Marker"}
-          position={{lat: 37.762391, lng: -122.439192}}
-          icon={{
-            url: "/img/icon.svg",
-            anchor: this.props.google.maps.Point(32, 32),
-            scaledSize: this.props.google.maps.Size(64, 64)
-          }}
-        />
+        {/* // <Marker
+        //   onClick={(e)=>{this.onMarkerClick(e)}}
+        //   onMouseover = {(e)=>{this.onMouseoverMarker(e)}}        
+        //   title={"This Marker"}
+        //   position={{lat: 37.762391, lng: -122.439192}}
+        //   icon={{
+        //     url: "/img/icon.svg",
+        //     anchor: this.props.google.maps.Point(32, 32),
+        //     scaledSize: this.props.google.maps.Size(64, 64)
+        //   }}
+        // /> */}
 
-        <InfoWindow 
-          position={{lat: 37.762391, lng: -122.439192}}
-          marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow} 
-        >
-          <div>
-            <h1>{this.state.selectedPlace.name} </h1>
-          </div>
-        </InfoWindow>
+
 
 
         </Map>
@@ -105,3 +130,4 @@ class App extends Component {
 export default GoogleApiWrapper({
   apiKey: '',
 })(App);
+
