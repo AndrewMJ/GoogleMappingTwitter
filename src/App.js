@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {Map, Marker, InfoWindow, GoogleApiWrapper} from 'google-maps-react';
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+import TwitterHandle from './TwitterHandle.js'
 
 {/* <InfoWindow /> gives the ability to pop up "more info" on the Map */}
 
@@ -14,9 +16,32 @@ class App extends Component {
       activeMarker: {},
       selectedPlace: {},
       showingInfoWindow: false,
+      messageFromExpress: []
     };
   }
 
+  componentDidMount(){
+    this.getStuffFromExpress();
+  }
+
+  getStuffFromExpress(){
+    axios({
+      method: 'get',
+      url: 'http://localhost:3030/askTwitter',
+    }).then(responseFromExpress => {
+      let array = [];
+
+      responseFromExpress.data.forEach(element => {
+        console.log(element);
+        array.push(element);
+      })
+      
+      // console.log(JSON.parse(responseFromExpress.data[0]));
+      this.setState({
+        messageFromExpress: array
+      })
+    })
+  }
 
   onMouseoverMarker(props, marker, e){
     console.log("Mousing OVer");
@@ -44,6 +69,12 @@ class App extends Component {
   render() {
     let markerList = [];
     let infoList = [];
+    let dataList = [];
+    console.log("++++++++++++++++++");
+    console.log(this.state.messageFromExpress);
+    //console.log(typeof(this.state.messageFromExpress));
+    //console.log( JSON.parse(this.state.messageFromExpress));
+   // console.log(jsonObj);
     
     const style={
       Marker:{
@@ -52,12 +83,19 @@ class App extends Component {
       }
     }
 
+    this.state.messageFromExpress.forEach(element => {
+      dataList.push(
+        <h3>{element.location}</h3>
+      );
+    });
+
+    
     this.props.myMapArr.forEach(element => {
       markerList.push(
           <Marker
             onClick={(e)=>{this.onMarkerClick(e)}}
             title={'The marker`s title will appear as a tooltip.'}
-            name={"TwitterHandle "}
+            name={<TwitterHandle twitterHandle={this.state.messageFromExpress[0]}/>}
             position={{lat: element.lat, lng: element.lng}} 
             style={style.Marker}
           />)
@@ -79,6 +117,8 @@ class App extends Component {
 
   return (
       <div className="App">
+      
+        
         <Map className="map"
           style={{
             height: "400px",  
@@ -122,6 +162,8 @@ class App extends Component {
 
 
         </Map>
+        {dataList}
+        {/* <h1>{this.state.messageFromExpress}</h1> */}
       </div>
     );
   }
