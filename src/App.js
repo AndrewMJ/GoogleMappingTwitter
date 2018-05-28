@@ -16,12 +16,30 @@ class App extends Component {
       activeMarker: {},
       selectedPlace: {},
       showingInfoWindow: false,
-      messageFromExpress: []
+      messageFromExpress: [],
+      currentLocation: {
+        lat: 0,
+        lng: 0
+      }
     };
   }
 
   componentDidMount(){
     this.getStuffFromExpress();
+    this.getGeoCode();
+  }
+
+  getGeoCode(){
+    axios({
+      method: 'get',
+      url: "https://maps.googleapis.com/maps/api/geocode/json?address=CA&key=AIzaSyBLrJTo6A6mEhwB3uIA8o5-D2cJPv1ft1g"
+
+    }).then(geoData => {
+      console.log("|||||||||||||||");
+      console.log(geoData.data.results);
+      console.log("?|||||||||||||||?");
+      
+    });
   }
 
   getStuffFromExpress(){
@@ -72,9 +90,6 @@ class App extends Component {
     let dataList = [];
     console.log("++++++++++++++++++");
     console.log(this.state.messageFromExpress);
-    //console.log(typeof(this.state.messageFromExpress));
-    //console.log( JSON.parse(this.state.messageFromExpress));
-   // console.log(jsonObj);
     
     const style={
       Marker:{
@@ -90,29 +105,28 @@ class App extends Component {
     });
 
     
-    this.props.myMapArr.forEach(element => {
-      markerList.push(
-          <Marker
+    this.props.myMapArr.map((element, index)=>{
+          markerList.push(<Marker
             onClick={(e)=>{this.onMarkerClick(e)}}
             title={'The marker`s title will appear as a tooltip.'}
-            name={<TwitterHandle twitterHandle={this.state.messageFromExpress[0]}/>}
+            name={<TwitterHandle twitterHandle={this.state.messageFromExpress[index]}/>}
             position={{lat: element.lat, lng: element.lng}} 
             style={style.Marker}
-          />)
+          />);
     
 
-      infoList.push(
+      // infoList.push(
 
-           <InfoWindow 
-            position={{lat: element.lat, lng: element.lng}}
-            marker={this.state.activeMarker}
-            visible={this.state.showingInfoWindow} 
-          >
-            <div>
-              <h1>{this.state.selectedPlace.name} </h1>
-            </div>
-          </InfoWindow> 
-        );
+      //      <InfoWindow 
+      //       position={{lat: element.lat, lng: element.lng}}
+      //       marker={this.state.activeMarker}
+      //       visible={this.state.showingInfoWindow} 
+      //     >
+      //       <div>
+      //         <h1>{this.state.selectedPlace.name} </h1>
+      //       </div>
+      //     </InfoWindow> 
+      //   );
     });
 
   return (
@@ -159,11 +173,18 @@ class App extends Component {
         // /> */}
 
 
-
+           <InfoWindow 
+            position={{lat: 40.7128,   lng: -74.00460}}
+            marker={this.state.activeMarker}
+            visible={this.state.showingInfoWindow} 
+          >
+            <div>
+              <h1>{this.state.selectedPlace.name} </h1>
+            </div>
+          </InfoWindow> 
 
         </Map>
         {dataList}
-        {/* <h1>{this.state.messageFromExpress}</h1> */}
       </div>
     );
   }
