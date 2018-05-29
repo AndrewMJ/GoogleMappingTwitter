@@ -11,7 +11,6 @@ class App extends Component {
   constructor(props){
     super(props);
 
-    //console.log(props.myMapArr);
     this.state = {
       activeMarker: {},
       selectedPlace: {},
@@ -37,9 +36,6 @@ class App extends Component {
       method: 'get',
       url: `https://maps.googleapis.com/maps/api/geocode/json?address=+${this.state.currLocation}&key=AIzaSyBLrJTo6A6mEhwB3uIA8o5-D2cJPv1ft1g`
     }).then(geoData => {
-      // console.log(geoData.data.results[0].formatted_address);
-      // console.log(geoData.data.results[0].geometry.location);
-      // console.log(this.state.locations)
       let addLocation = this.state.locations;
       if(geoData.data.results[0] != null){
         addLocation.push(geoData.data.results[0].geometry.location);
@@ -57,14 +53,13 @@ class App extends Component {
       let array = [];
 
       responseFromExpress.data.forEach(element => {
+
         let strArray = element.location.split(', ');
         for(let i=0; i < strArray.length; i++){
           strArray[i] = "+" + strArray[i];
         }
-
         let myLocation = strArray.join('');
         this.setState({currLocation: myLocation});
-        // console.log(myLocation);
 
         array.push(element);
         this.getGeoCode();
@@ -88,9 +83,6 @@ class App extends Component {
 
   // Does something when marker is click
   onMarkerClick(props, marker, e){
-    // console.log("showInfo: " + this.state.showingInfoWindow);
-    // console.log( props);
-    // console.log("marker: " + marker1);
   
     this.setState({
       selectedPlace: props,
@@ -105,42 +97,30 @@ class App extends Component {
     let infoList = [];
     let dataList = [];
 
-    // Style the marker
-    const style={
-      Marker:{
-        height:'10px', 
-        width:'10px'
-      }
-    }
+
 
     // Place markers around the map 
     this.state.locations.map((element, index)=>{
       markerList.push(<Marker
-
         // Allows us to click on this marker to do something (show tweet)
         onClick={(e)=>{this.onMarkerClick(e)}}
-
-        // Not sure what this does
-        //title={'The marker`s title will appear as a tooltip.'}
 
         // name: Controls what goes inside the box
         name={<TwitterHandle twitterHandle={this.state.messageFromExpress[index]}/>}
 
         // posiition: posisition of the Marker on the map
         position={{lat: element.lat, lng: element.lng}} 
-        style={style.Marker}
       />);
     });
 
   return (
       <div className="App">
-      
         {/* DISPLAY THE MAP */}
         <Map className="map"
         //{/*  SIZE OF MAP COMPARE TO SCREEN*/}
           style={{
-            height: "400px",  
-            width: "100%"
+            height: "100%",  
+            width: "100%",
             }}
             google={this.props.google}
             //{/* INTIALIZE CENTER OF MAP */}
@@ -150,22 +130,21 @@ class App extends Component {
             }}
 
            // {/* CONTROL ZOOM OF MAP */}
-            zoom={5}
+            zoom={4}
         >  
 
         {/* LIST of multiple <Marker>...</Marker> setup above */}
         {markerList}
 
         {/* Displays the tweet box */}
+        
         <InfoWindow 
           //position={{lat: 40.7128,   lng: -74.00460}}
           position = {this.state.selectedPlace.position}
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow} 
         > 
-          <div className="infoWindow">
-            <h1>{this.state.selectedPlace.name} </h1>
-          </div>
+            {this.state.selectedPlace.name}
         </InfoWindow> 
         </Map>
       </div>
