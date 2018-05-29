@@ -34,7 +34,7 @@ class App extends Component {
   getGeoCode(){
     axios({
       method: 'get',
-      url: `https://maps.googleapis.com/maps/api/geocode/json?address=+${this.state.currLocation}&key=AIzaSyBLrJTo6A6mEhwB3uIA8o5-D2cJPv1ft1g`
+      url: `https://maps.googleapis.com/maps/api/geocode/json?address=+${this.state.currLocation}&key=`
     }).then(geoData => {
       let addLocation = this.state.locations;
       if(geoData.data.results[0] != null){
