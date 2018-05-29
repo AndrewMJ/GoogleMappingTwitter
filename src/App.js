@@ -4,6 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
 import TwitterHandle from './TwitterHandle.js'
+import apiKey from './key_creds.js'
 
 {/* <InfoWindow /> gives the ability to pop up "more info" on the Map */}
 
@@ -24,6 +25,7 @@ class App extends Component {
       locations: []
 
     };
+
   }
 
   componentDidMount(){
@@ -34,7 +36,7 @@ class App extends Component {
   getGeoCode(){
     axios({
       method: 'get',
-      url: `https://maps.googleapis.com/maps/api/geocode/json?address=+${this.state.currLocation}&key=AIzaSyBLrJTo6A6mEhwB3uIA8o5-D2cJPv1ft1g`
+      url: `https://maps.googleapis.com/maps/api/geocode/json?address=+${this.state.currLocation}&key=${apiKey}`
     }).then(geoData => {
       let addLocation = this.state.locations;
       if(geoData.data.results[0] != null){
@@ -153,6 +155,6 @@ class App extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: '',
+  apiKey: apiKey,
 })(App);
 

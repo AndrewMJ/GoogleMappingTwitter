@@ -5,7 +5,7 @@ class TwitterHandle extends React.Component{
         super(props);
 
         // props.twitterHandle: Data from twitter API
-        console.log(props.twitterHandle);
+        // console.log(props.twitterHandle);
     }
 
 
