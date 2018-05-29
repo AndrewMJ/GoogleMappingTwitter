@@ -41,8 +41,10 @@ class App extends Component {
       // console.log(geoData.data.results[0].geometry.location);
       // console.log(this.state.locations)
       let addLocation = this.state.locations;
-      addLocation.push(geoData.data.results[0].geometry.location);
-      this.setState({locations: addLocation})
+      if(geoData.data.results[0] != null){
+        addLocation.push(geoData.data.results[0].geometry.location);
+        this.setState({locations: addLocation})
+      }
     });
   }
 
@@ -85,14 +87,14 @@ class App extends Component {
   // }
 
   // Does something when marker is click
-  onMarkerClick(props, marker1, e){
+  onMarkerClick(props, marker, e){
     // console.log("showInfo: " + this.state.showingInfoWindow);
     // console.log( props);
     // console.log("marker: " + marker1);
   
     this.setState({
       selectedPlace: props,
-      activeMarker: marker1,
+       activeMarker: marker,
       showingInfoWindow: true
     });
   }
@@ -156,11 +158,12 @@ class App extends Component {
 
         {/* Displays the tweet box */}
         <InfoWindow 
-          position={{lat: 40.7128,   lng: -74.00460}}
+          //position={{lat: 40.7128,   lng: -74.00460}}
+          position = {this.state.selectedPlace.position}
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow} 
         > 
-          <div>
+          <div className="infoWindow">
             <h1>{this.state.selectedPlace.name} </h1>
           </div>
         </InfoWindow> 

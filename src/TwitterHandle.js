@@ -10,8 +10,14 @@ class TwitterHandle extends React.Component{
 
     render(){
         return(
-            <div>
-                <h4>{this.props.twitterHandle.location}</h4>
+            <div className = "tweetBox">
+               <div className = "tweetBoxDockLeft"> 
+                   <p>@{this.props.twitterHandle.screen_name}</p>
+                    <p>{this.props.twitterHandle.tweet_text}</p>
+                </div>
+                <div className = "tweetBoxDockRight">
+                    <h5>{this.props.twitterHandle.created_at}</h5>
+                </div>
             </div>
         )
     }

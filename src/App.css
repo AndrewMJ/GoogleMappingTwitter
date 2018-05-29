@@ -31,3 +31,21 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.tweetBox{
+  background-color: lightblue;
+  text-align: left;
+  font-size: 13pt;
+}
+
+.tweetBoxDockLeft{
+  text-align: left;
+}
+
+.tweetBoxDockRight{
+  text-align: right;
+}
+
+.infoWindow{
+  background-color: chartreuse;
+}
