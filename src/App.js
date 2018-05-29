@@ -29,23 +29,24 @@ class App extends Component {
 
   componentDidMount(){
     this.getStuffFromExpress();
-    //this.getGeoCode();
   }
 
+  // Grab Location from twitter and convert to Geo Location
   getGeoCode(){
     axios({
       method: 'get',
       url: `https://maps.googleapis.com/maps/api/geocode/json?address=+${this.state.currLocation}&key=AIzaSyBLrJTo6A6mEhwB3uIA8o5-D2cJPv1ft1g`
     }).then(geoData => {
-      console.log(geoData.data.results[0].formatted_address);
-      console.log(geoData.data.results[0].geometry.location);
-      console.log(this.state.locations)
+      // console.log(geoData.data.results[0].formatted_address);
+      // console.log(geoData.data.results[0].geometry.location);
+      // console.log(this.state.locations)
       let addLocation = this.state.locations;
       addLocation.push(geoData.data.results[0].geometry.location);
       this.setState({locations: addLocation})
     });
   }
 
+  // Grab stuff from Twitter API
   getStuffFromExpress(){
     axios({
       method: 'get',
@@ -74,21 +75,21 @@ class App extends Component {
     });
   }
 
-  onMouseoverMarker(props, marker, e){
-    console.log("Mousing OVer");
-    this.setState({
-      selectedPlace: props,
-      activeMarker: marker,
-      showingInfoWindow: true
-    });
-  }
+  // Does something when mouse over the marker
+  // onMouseoverMarker(props, marker, e){
+  //   this.setState({
+  //     selectedPlace: props,
+  //     activeMarker: marker,
+  //     showingInfoWindow: true
+  //   });
+  // }
 
+  // Does something when marker is click
   onMarkerClick(props, marker1, e){
-    console.log("showInfo: " + this.state.showingInfoWindow);
-    console.log( props);
-    console.log("marker: " + marker1);
-    
-    
+    // console.log("showInfo: " + this.state.showingInfoWindow);
+    // console.log( props);
+    // console.log("marker: " + marker1);
+  
     this.setState({
       selectedPlace: props,
       activeMarker: marker1,
@@ -101,9 +102,8 @@ class App extends Component {
     let markerList = [];
     let infoList = [];
     let dataList = [];
-    console.log("++++++++++++++++++");
-    //console.log(this.state.messageFromExpress);
-    
+
+    // Style the marker
     const style={
       Marker:{
         height:'10px', 
@@ -111,50 +111,27 @@ class App extends Component {
       }
     }
 
-    // this.state.messageFromExpress.forEach(element => {
-    //   dataList.push(
-    //     <h3>{element.location}</h3>
-    //   );
-    // });
-
-   // console.log(this.state.locations);
-
+    // Place markers around the map 
     this.state.locations.map((element, index)=>{
       markerList.push(<Marker
+
+        // Allows us to click on this marker to do something (show tweet)
         onClick={(e)=>{this.onMarkerClick(e)}}
+
+        // Not sure what this does
         //title={'The marker`s title will appear as a tooltip.'}
+
+        // name: Controls what goes inside the box
         name={<TwitterHandle twitterHandle={this.state.messageFromExpress[index]}/>}
+
+        // posiition: posisition of the Marker on the map
         position={{lat: element.lat, lng: element.lng}} 
         style={style.Marker}
       />);
-
-    // this.props.myMapArr.map((element, index)=>{
-    //       markerList.push(<Marker
-    //         onClick={(e)=>{this.onMarkerClick(e)}}
-    //         title={'The marker`s title will appear as a tooltip.'}
-    //         name={<TwitterHandle twitterHandle={this.state.messageFromExpress[index]}/>}
-    //         position={{lat: element.lat, lng: element.lng}} 
-    //         style={style.Marker}
-    //       />);
-    
-
-      // infoList.push(
-
-      //      <InfoWindow 
-      //       position={{lat: element.lat, lng: element.lng}}
-      //       marker={this.state.activeMarker}
-      //       visible={this.state.showingInfoWindow} 
-      //     >
-      //       <div>
-      //         <h1>{this.state.selectedPlace.name} </h1>
-      //       </div>
-      //     </InfoWindow> 
-      //   );
     });
 
   return (
       <div className="App">
-      {dataList}
       
         {/* DISPLAY THE MAP */}
         <Map className="map"
@@ -177,19 +154,16 @@ class App extends Component {
         {/* LIST of multiple <Marker>...</Marker> setup above */}
         {markerList}
 
-        {/*  */}
-        {infoList}
-
+        {/* Displays the tweet box */}
         <InfoWindow 
           position={{lat: 40.7128,   lng: -74.00460}}
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow} 
-          > 
-            <div>
-              <h1>{this.state.selectedPlace.name} </h1>
-            </div>
-          </InfoWindow> 
-
+        > 
+          <div>
+            <h1>{this.state.selectedPlace.name} </h1>
+          </div>
+        </InfoWindow> 
         </Map>
       </div>
     );
