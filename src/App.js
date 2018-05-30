@@ -17,10 +17,6 @@ class App extends Component {
       selectedPlace: {},
       showingInfoWindow: false,
       messageFromExpress: [],
-      currentLocation: {
-        lat: 0,
-        lng: 0
-      },
       currLocation: "+Oakland, +CA",
       locations: []
 
@@ -67,21 +63,11 @@ class App extends Component {
         this.getGeoCode();
       });
       
-      // console.log(JSON.parse(responseFromExpress.data[0]));
       this.setState({
         messageFromExpress: array
       });
     });
   }
-
-  // Does something when mouse over the marker
-  // onMouseoverMarker(props, marker, e){
-  //   this.setState({
-  //     selectedPlace: props,
-  //     activeMarker: marker,
-  //     showingInfoWindow: true
-  //   });
-  // }
 
   // Does something when marker is click
   onMarkerClick(props, marker, e){
@@ -141,7 +127,6 @@ class App extends Component {
         {/* Displays the tweet box */}
         
         <InfoWindow 
-          //position={{lat: 40.7128,   lng: -74.00460}}
           position = {this.state.selectedPlace.position}
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow} 
